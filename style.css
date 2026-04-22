@@ -1,0 +1,198 @@
+:root {
+    /* Stitch Design Tokens: Ecos de Córdoba (The Digital Archeologist) */
+    --surface: #121415;
+    --surface-low: #1a1c1d;
+    --surface-high: #282a2b;
+    --surface-highest: #333536;
+    --surface-container-lowest: #0c0e0f;
+    
+    --primary: #ffb599;
+    --primary-container: #e17142;
+    --on-primary: #5a1c00;
+    
+    --secondary: #bdc8cd;
+    --secondary-container: #404b4f;
+    
+    --on-surface: #e2e2e3;
+    --on-surface-variant: #ddc0b6;
+    
+    --outline: #a58b82;
+    --outline-variant: rgba(86, 66, 59, 0.15); /* Ghost Border */
+    
+    /* Typography */
+    --font-display: 'Epilogue', sans-serif;
+    --font-body: 'Manrope', sans-serif;
+    --font-data: 'Space Grotesk', monospace;
+    
+    /* Transitions (Cinematic FPV) */
+    --transition-cinematic: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-fast: 0.3s ease;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Epilogue:wght@300;600;800&family=Inter:wght@400;700&family=Manrope:wght@300;500;700&family=Space+Grotesk:wght@300;500;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--surface);
+    color: var(--on-surface);
+    font-family: var(--font-body);
+    line-height: 1.6;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Atmospheric Texture Overlay */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('https://www.transparenttextures.com/patterns/stardust.png'); /* Subtle grain */
+    opacity: 0.03;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+h1, h2, h3, .display-text {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+}
+
+.data-label {
+    font-family: var(--font-data);
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    color: var(--primary);
+}
+
+/* Layout Rules */
+.section {
+    padding: 10rem 5%;
+    position: relative;
+}
+
+.asymmetric-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 2rem;
+}
+
+/* Glassmorphism Panels */
+.glass-panel {
+    background: rgba(51, 53, 54, 0.6);
+    backdrop-filter: blur(24px);
+    border: 1px solid var(--outline-variant);
+    padding: 2rem;
+    transition: var(--transition-cinematic);
+}
+
+.glass-panel:hover {
+    background: rgba(51, 53, 54, 0.7);
+    border-color: rgba(255, 181, 153, 0.3);
+}
+
+/* Oxide Spark Buttons */
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary), var(--primary-container));
+    color: var(--on-primary);
+    padding: 1rem 2rem;
+    border: none;
+    font-family: var(--font-data);
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: var(--transition-mid);
+    border-radius: 2px;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(225, 113, 66, 0.2);
+}
+
+/* Background Atmospheric Gradients */
+.light-leak {
+    position: absolute;
+    width: 60vw;
+    height: 60vw;
+    background: radial-gradient(circle, rgba(225, 113, 66, 0.05) 0%, rgba(225, 113, 66, 0) 70%);
+    pointer-events: none;
+    border-radius: 50%;
+}
+
+/* Footer Refinement (No-Line Rule) */
+footer {
+    padding: 6rem 5%;
+    background-color: var(--surface-container-lowest);
+    text-align: center;
+}
+
+/* Scroll Snap for focus */
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 6rem;
+}
+
+/* Scanline Animation */
+@keyframes scan {
+    0% { top: 0; }
+    100% { top: 100%; }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1024px) {
+    .asymmetric-grid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+    }
+
+    .asymmetric-grid > div {
+        grid-column: span 1 !important;
+        margin-top: 0 !important;
+    }
+
+    .section {
+        padding: 5rem 5%;
+    }
+
+    nav {
+        flex-direction: column;
+        gap: 1.5rem;
+        width: 95% !important;
+        padding: 1.5rem !important;
+        top: 1rem !important;
+    }
+
+    nav div {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem !important;
+    }
+
+    h2 {
+        font-size: 2.8rem !important;
+    }
+
+    h1 {
+        font-size: 3.5rem !important;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 2.8rem !important;
+    }
+    
+    .data-label {
+        font-size: 0.65rem;
+    }
+}
