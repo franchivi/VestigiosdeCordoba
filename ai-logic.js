@@ -1,9 +1,8 @@
 /* 
-   Archeologist AI - Gemini Engine
-   Handles the integration with Google Generative AI (Gemini 1.5 Flash).
+   Archeologist AI - Gemini Engine (REST API Version)
+   Handles the integration with Google Generative AI via direct HTTP requests.
+   This version is optimized to work even on local file:// protocols.
 */
-
-import { GoogleGenAI } from 'https://cdn.jsdelivr.net/npm/@google/genai/+esm';
 
 const chatMessages = document.getElementById('chat-messages');
 const userInput = document.getElementById('user-input');
@@ -12,13 +11,15 @@ const apiKeyInput = document.getElementById('api-key-input');
 const saveApiKeyBtn = document.getElementById('save-api-key');
 const apiConfigPanel = document.getElementById('api-config-panel');
 
-let geminiModel = null;
+let currentApiKey = null;
 
 const addMessage = (text, sender) => {
     const msgDiv = document.createElement('div');
     msgDiv.classList.add(sender === 'ai' ? 'ai-message' : 'user-message', 'message');
     if (sender === 'ai') {
-        msgDiv.innerHTML = `<p class="data-label" style="color: var(--primary); font-size: 0.6rem;">// RESPUESTA NÚCLEO</p><p>${text}</p>`;
+        // Convert basic markdown-like bold to HTML for better readability
+        const formattedText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        msgDiv.innerHTML = `<p class="data-label" style="color: var(--primary); font-size: 0.6rem;">// RESPUESTA NÚCLEO</p><p>${formattedText}</p>`;
     } else {
         msgDiv.innerText = text;
     }
@@ -26,30 +27,22 @@ const addMessage = (text, sender) => {
     chatMessages.scrollTop = chatMessages.scrollHeight;
 };
 
-const initGemini = (key) => {
-    try {
-        const genAI = new GoogleGenAI({ apiKey: key });
-        geminiModel = genAI.getGenerativeModel({ 
-            model: 'gemini-1.5-flash',
-            systemInstruction: "Eres un experto arqueólogo digital especializado en los Vestigios de Córdoba. Tu tono es profesional, técnico pero apasionado. Responde en español de forma concisa."
-        });
-        console.log("Gemini Engine Active.");
-    } catch (e) {
-        console.error("Gemini Init Fail:", e);
-    }
-};
-
 const savedKey = localStorage.getItem('gemini_api_key');
-if (savedKey) initGemini(savedKey);
+if (savedKey) {
+    currentApiKey = savedKey;
+    apiKeyInput.value = savedKey;
+}
 
 if (saveApiKeyBtn) {
     saveApiKeyBtn.addEventListener('click', () => {
         const key = apiKeyInput.value.trim();
         if (key) {
             localStorage.setItem('gemini_api_key', key);
-            initGemini(key);
+            currentApiKey = key;
             apiConfigPanel.style.display = 'none';
             addMessage("Protocolo de conexión actualizado. Núcleo Gemini activo.", 'ai');
+        } else {
+            addMessage("Error: La llave no puede estar vacía.", 'ai');
         }
     });
 }
@@ -67,28 +60,48 @@ const handleSend = async () => {
     chatMessages.appendChild(thinkingDiv);
     chatMessages.scrollTop = chatMessages.scrollHeight;
 
-    try {
-        if (geminiModel) {
-            const result = await geminiModel.generateContent(text);
-            const response = await result.response;
+    if (!currentApiKey) {
+        setTimeout(() => {
             thinkingDiv.remove();
-            addMessage(response.text(), 'ai');
+            addMessage("Error crítico: Conexión Gemini no configurada. Por favor, haz clic en el icono del engranaje (⚙️) e introduce tu API Key. Puedes conseguir una gratis en Google AI Studio.", 'ai');
+        }, 1000);
+        return;
+    }
+
+    try {
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${currentApiKey}`;
+        
+        const payload = {
+            contents: [{
+                parts: [{ text: text }]
+            }],
+            systemInstruction: {
+                parts: [{ text: "Eres un experto arqueólogo digital especializado en los Vestigios de Córdoba. Tu tono es profesional, técnico pero apasionado. Eres un terminal de investigación (ARCHEOLOGIST_AI). Responde en español, sé conciso y formatea las palabras clave entre asteriscos dobles (**palabra**)." }]
+            }
+        };
+
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+        thinkingDiv.remove();
+
+        if (response.ok && data.candidates && data.candidates[0].content.parts[0].text) {
+            addMessage(data.candidates[0].content.parts[0].text, 'ai');
         } else {
-            setTimeout(() => {
-                thinkingDiv.remove();
-                addMessage("Error: Conexión Gemini no configurada. Introduce tu API Key en el panel de herramientas (⚙️).", 'ai');
-            }, 1000);
+            console.error("Gemini API Error:", data);
+            addMessage("Error en la respuesta del núcleo: " + (data.error?.message || "Respuesta inválida"), 'ai');
         }
+
     } catch (e) {
         thinkingDiv.remove();
-        addMessage("Fallo en la comunicación con el núcleo: " + e.message, 'ai');
+        console.error("Fetch Error:", e);
+        addMessage("Fallo de red al comunicar con el núcleo Gemini. Verifica tu conexión a internet.", 'ai');
     }
 };
 
 if (sendBtn) sendBtn.addEventListener('click', handleSend);
 if (userInput) userInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleSend(); });
-
-// Detection for file:// protocol issue
-if (window.location.protocol === 'file:') {
-    console.warn("ARCHEOLOGIST_AI: ES Modules logic (Gemini) might be blocked on file:// protocol. Use a local server.");
-}
