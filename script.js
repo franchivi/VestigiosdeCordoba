@@ -125,5 +125,71 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // AI Assistant Logic
+    const aiToggle = document.getElementById('ai-toggle');
+    const aiChatWindow = document.getElementById('ai-chat-window');
+    const closeChat = document.getElementById('close-chat');
+    const sendBtn = document.getElementById('send-btn');
+    const userInput = document.getElementById('user-input');
+    const chatMessages = document.getElementById('chat-messages');
+
+    if (aiToggle && aiChatWindow) {
+        aiToggle.addEventListener('click', () => {
+            aiChatWindow.classList.toggle('active');
+        });
+
+        closeChat.addEventListener('click', () => {
+            aiChatWindow.classList.remove('active');
+        });
+
+        const addMessage = (text, sender) => {
+            const msgDiv = document.createElement('div');
+            msgDiv.classList.add(sender === 'ai' ? 'ai-message' : 'user-message', 'message');
+            
+            if (sender === 'ai') {
+                const label = document.createElement('p');
+                label.classList.add('data-label');
+                label.style.cssText = 'color: var(--primary); font-size: 0.6rem;';
+                label.innerText = '// RESPUESTA NÚCLEO';
+                msgDiv.appendChild(label);
+            }
+
+            const p = document.createElement('p');
+            p.innerText = text;
+            msgDiv.appendChild(p);
+            
+            chatMessages.appendChild(msgDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        };
+
+        const getAIResponse = (query) => {
+            const q = query.toLowerCase();
+            if (q.includes('mezquita')) return "La Mezquita de Córdoba fue el centro espiritual y político del Califato. Sus arcos bicolores son un prodigio de la ingeniería y estética islámica.";
+            if (q.includes('muro') || q.includes('muralla')) return "El recito amurallado de Córdoba protegía la medina. Muchos tramos aún son visibles, especialmente cerca del Alcázar.";
+            if (q.includes('agua') || q.includes('acueducto') || q.includes('popea')) return "El acueducto Aqua Augusta suministraba agua a la ciudad. Los Baños de Popea conservan restos de molinos y presas históricas.";
+            if (q.includes('mina') || q.includes('muriano')) return "Cerro Muriano fue un centro minero vital desde época romana hasta el siglo XX, extrayendo cobre para todo el Mediterráneo.";
+            return "Interesante consulta. Mis registros indican que ese vestigio forma parte del complejo sistema logístico de la Sierra de Córdoba. ¿Deseas más detalles técnicos?";
+        };
+
+        const handleSend = () => {
+            const text = userInput.value.trim();
+            if (text) {
+                addMessage(text, 'user');
+                userInput.value = '';
+                
+                // Simulate AI thinking
+                setTimeout(() => {
+                    const response = getAIResponse(text);
+                    addMessage(response, 'ai');
+                }, 1000);
+            }
+        };
+
+        sendBtn.addEventListener('click', handleSend);
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') handleSend();
+        });
+    }
+
     console.log("Digital Archeologist System Initialized.");
 });

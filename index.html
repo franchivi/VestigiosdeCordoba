@@ -243,6 +243,31 @@
         </div>
     </section>
 
+    <!-- AI Research Assistant (Gemini) -->
+    <div id="ai-assistant-container">
+        <button id="ai-toggle" class="glass-panel" aria-label="Abrir Asistente IA">
+            <span class="data-label">IA // CONSULTAR</span>
+            <div class="pulse-ring"></div>
+        </button>
+        
+        <div id="ai-chat-window" class="glass-panel">
+            <div class="chat-header">
+                <span class="data-label">ARCHEOLOGIST_AI // V.1.0</span>
+                <button id="close-chat">×</button>
+            </div>
+            <div id="chat-messages">
+                <div class="ai-message message">
+                    <p class="data-label" style="color: var(--primary); font-size: 0.6rem;">// ENTRADA SISTEMA</p>
+                    <p>Bienvenido al núcleo de datos de Vestigios. Soy tu asistente de reconstrucción digital. ¿Sobre qué yacimiento o vestigio deseas profundizar?</p>
+                </div>
+            </div>
+            <div class="chat-input-area">
+                <input type="text" id="user-input" placeholder="Escribe tu consulta aquí..." autoComplete="off">
+                <button id="send-btn" class="data-label">ENVIAR</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer class="section">
         <p class="data-label">PROYECTO VESTIGIOS // SIERRA DE CÓRDOBA</p>
