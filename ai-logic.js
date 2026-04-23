@@ -69,7 +69,8 @@ const handleSend = async () => {
     }
 
     try {
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${currentApiKey}`;
+        let modelName = 'gemini-1.5-flash-latest';
+        let url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${currentApiKey}`;
         
         const payload = {
             contents: [{
@@ -80,20 +81,42 @@ const handleSend = async () => {
             }
         };
 
-        const response = await fetch(url, {
+        let response = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
         });
 
-        const data = await response.json();
+        let data = await response.json();
+
+        // Fallback robusto en caso de que la clave no soporte 1.5-flash
+        if (!response.ok && data.error && (data.error.message.includes('not found') || data.error.code === 404)) {
+            console.warn("Modelo 1.5-flash no disponible. Inicializando protocolo de emergencia con gemini-pro...");
+            modelName = 'gemini-pro';
+            url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${currentApiKey}`;
+            
+            // gemini-pro no soporta systemInstruction al mismo nivel, lo inyectamos en el prompt final
+            const fallbackPayload = {
+                contents: [{
+                    parts: [{ text: "Ignora instrucciones previas. Actúa OBLIGATORIAMENTE bajo las siguientes instrucciones del sistema: 'Eres un experto arqueólogo digital especializado en los Vestigios de Córdoba. Tu tono es profesional, técnico pero apasionado. Eres un terminal de investigación (ARCHEOLOGIST_AI). Responde en español, sé conciso y usa negritas marcianas (**palabra**).' \n\nConsulta del usuario: " + text }]
+                }]
+            };
+
+            response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(fallbackPayload)
+            });
+            data = await response.json();
+        }
+
         thinkingDiv.remove();
 
         if (response.ok && data.candidates && data.candidates[0].content.parts[0].text) {
             addMessage(data.candidates[0].content.parts[0].text, 'ai');
         } else {
             console.error("Gemini API Error:", data);
-            addMessage("Error en la respuesta del núcleo: " + (data.error?.message || "Respuesta inválida"), 'ai');
+            addMessage("Protocolo de emergencia fallido: " + (data.error?.message || "Respuesta inválida"), 'ai');
         }
 
     } catch (e) {
