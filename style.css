@@ -425,3 +425,23 @@ html {
         bottom: 1rem;
     }
 }
+
+#api-config-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+#api-config-panel input {
+    background: var(--surface-container-highest);
+    border: 1px solid var(--outline-variant);
+    color: var(--on-surface);
+    padding: 0.5rem;
+    font-family: var(--font-data);
+    font-size: 0.7rem;
+}
+
+#chat-messages strong {
+    color: var(--primary);
+}
