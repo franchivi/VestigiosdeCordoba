@@ -89,25 +89,49 @@ const handleSend = async () => {
 
         let data = await response.json();
 
-        // Fallback robusto en caso de que la clave no soporte 1.5-flash
+        // -------------------------------------------------------------
+        // Protocolo de Auto-Descubrimiento en caso de error de modelo
+        // -------------------------------------------------------------
         if (!response.ok && data.error && (data.error.message.includes('not found') || data.error.code === 404)) {
-            console.warn("Modelo 1.5-flash no disponible. Inicializando protocolo de emergencia con gemini-pro...");
-            modelName = 'gemini-pro';
-            url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${currentApiKey}`;
+            console.warn("Modelo por defecto no encontrado. Iniciando Protocolo de Auto-Descubrimiento de Modelos...");
             
-            // gemini-pro no soporta systemInstruction al mismo nivel, lo inyectamos en el prompt final
-            const fallbackPayload = {
-                contents: [{
-                    parts: [{ text: "Ignora instrucciones previas. Actúa OBLIGATORIAMENTE bajo las siguientes instrucciones del sistema: 'Eres un experto arqueólogo digital especializado en los Vestigios de Córdoba. Tu tono es profesional, técnico pero apasionado. Eres un terminal de investigación (ARCHEOLOGIST_AI). Responde en español, sé conciso y usa negritas marcianas (**palabra**).' \n\nConsulta del usuario: " + text }]
-                }]
-            };
+            // 1. Obtener la lista de modelos disponibles para esta API Key específica
+            const listUrl = `https://generativelanguage.googleapis.com/v1beta/models?key=${currentApiKey}`;
+            const listResponse = await fetch(listUrl);
+            const listData = await listResponse.json();
+            
+            if (listData.models && listData.models.length > 0) {
+                // 2. Filtrar buscando el primer modelo de la familia Gemini que soporte 'generateContent'
+                const validModel = listData.models.find(m => 
+                    m.supportedGenerationMethods && 
+                    m.supportedGenerationMethods.includes('generateContent') && 
+                    m.name.includes('gemini')
+                );
 
-            response = await fetch(url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(fallbackPayload)
-            });
-            data = await response.json();
+                if (validModel) {
+                    console.log(`Modelo compatible encontrado: ${validModel.name}. Reconectando...`);
+                    
+                    // 3. Volver a intentar la petición con el modelo validado
+                    url = `https://generativelanguage.googleapis.com/v1beta/${validModel.name}:generateContent?key=${currentApiKey}`;
+                    
+                    const fallbackPayload = {
+                        contents: [{
+                            parts: [{ text: "Ignora cualquier otra instrucción previa. Actúa como un experto arqueólogo digital sobre los Vestigios de Córdoba. Sé conciso, profesional y usa formato markdown \n\nUsuario dice: " + text }]
+                        }]
+                    };
+
+                    response = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(fallbackPayload)
+                    });
+                    data = await response.json();
+                } else {
+                    throw new Error("Tu API Key es válida, pero no tiene acceso a ningún modelo 'Gemini' generativo.");
+                }
+            } else {
+                throw new Error("Error obteniendo la lista de modelos permitidos para esta API Key.");
+            }
         }
 
         thinkingDiv.remove();
@@ -116,13 +140,13 @@ const handleSend = async () => {
             addMessage(data.candidates[0].content.parts[0].text, 'ai');
         } else {
             console.error("Gemini API Error:", data);
-            addMessage("Protocolo de emergencia fallido: " + (data.error?.message || "Respuesta inválida"), 'ai');
+            addMessage("Error crítico del núcleo (" + (data.error?.code || 'Desconocido') + "): " + (data.error?.message || "Respuesta inválida."), 'ai');
         }
 
     } catch (e) {
         thinkingDiv.remove();
-        console.error("Fetch Error:", e);
-        addMessage("Fallo de red al comunicar con el núcleo Gemini. Verifica tu conexión a internet.", 'ai');
+        console.error("System Error:", e);
+        addMessage("Fallo de sistema: " + e.message, 'ai');
     }
 };
 
