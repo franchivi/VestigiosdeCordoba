@@ -155,7 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const p = document.createElement('p');
-            p.innerText = text;
+            p.innerHTML = text; // Changed to innerHTML to allow line breaks or formatting if needed
             msgDiv.appendChild(p);
             
             chatMessages.appendChild(msgDiv);
@@ -164,11 +164,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const getAIResponse = (query) => {
             const q = query.toLowerCase();
-            if (q.includes('mezquita')) return "La Mezquita de Córdoba fue el centro espiritual y político del Califato. Sus arcos bicolores son un prodigio de la ingeniería y estética islámica.";
-            if (q.includes('muro') || q.includes('muralla')) return "El recito amurallado de Córdoba protegía la medina. Muchos tramos aún son visibles, especialmente cerca del Alcázar.";
-            if (q.includes('agua') || q.includes('acueducto') || q.includes('popea')) return "El acueducto Aqua Augusta suministraba agua a la ciudad. Los Baños de Popea conservan restos de molinos y presas históricas.";
-            if (q.includes('mina') || q.includes('muriano')) return "Cerro Muriano fue un centro minero vital desde época romana hasta el siglo XX, extrayendo cobre para todo el Mediterráneo.";
-            return "Interesante consulta. Mis registros indican que ese vestigio forma parte del complejo sistema logístico de la Sierra de Córdoba. ¿Deseas más detalles técnicos?";
+            
+            // Knowledge Base Enrichment
+            if (q.includes('mezquita') || q.includes('arco')) 
+                return "Analizando estructura... <strong>La Mezquita</strong> es un palimpsesto arquitectónico. Su sistema de arcos dobles (herradura y medio punto) permitió elevar el techo sin perder estabilidad. ¿Sabías que los arcos rojos y blancos imitan la arquitectura romana y bizantina?";
+            
+            if (q.includes('muro') || q.includes('muralla') || q.includes('defensa')) 
+                return "Registros militares detectados: El <strong>Cinturón Defensivo</strong> de la Sierra incluía torres como las Siete Esquinas (858 d.C.). Estas atalayas formaban un sistema de comunicación visual mediante señales de fuego y humo hacia la capital Qurtuba.";
+            
+            if (q.includes('agua') || q.includes('acueducto') || q.includes('popea') || q.includes('hidraulica')) 
+                return "Módulo hídrico activo: El <strong>Aqua Augusta</strong> era una obra maestra de ingeniería de 18km. Los <strong>Baños de Popea</strong> no solo eran estéticos; albergaban el Molino del Martinete, clave para la industria batanera y la molienda de mineral.";
+            
+            if (q.includes('mina') || q.includes('muriano') || q.includes('cobre')) 
+                return "Escaneo de subsuelo completado: <strong>Cerro Muriano</strong> albergó las minas de cobre más productivas del Imperio Romano en Hispania. El pozo San Rafael llegó a los 470m de profundidad bajo control de la Córdoba Copper Co. Ltd.";
+            
+            if (q.includes('torre') || q.includes('esquinas') || q.includes('heptagonal'))
+                return "Ficha técnica: La <strong>Torre de las Siete Esquinas</strong> es única por su planta heptagonal irregular. Esta geometría permitía cubrir ángulos muertos en la vigilancia del estratégico Monasterio de Peña Melaria.";
+
+            if (q.includes('quien eres') || q.includes('que haces'))
+                return "Soy el terminal ARCHEOLOGIST_AI. Mi propósito es procesar datos estratigráficos y arqueológicos sobre los vestigios de la Sierra de Córdoba para facilitar tu exploración.";
+
+            if (q.includes('hola') || q.includes('saludos'))
+                return "Saludos, explorador. Conexión establecida con el núcleo de datos. ¿Qué coordenadas o vestigio deseas investigar hoy?";
+
+            // Dynamic Fallback
+            return "Consulta procesada. No encuentro un registro exacto para '" + query + "', pero mis datos sugieren que te refieres al sistema logístico entre Sierra y Ciudad. ¿Podrías especificar si buscas datos sobre <strong>Minas</strong>, <strong>Acueductos</strong> o <strong>Fortificaciones</strong>?";
         };
 
         const handleSend = () => {
@@ -177,11 +197,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 addMessage(text, 'user');
                 userInput.value = '';
                 
-                // Simulate AI thinking
+                // Add "Thinking" indicator
+                const thinkingDiv = document.createElement('div');
+                thinkingDiv.classList.add('ai-message', 'message', 'typing');
+                thinkingDiv.innerHTML = '<span class="data-label" style="font-size: 0.6rem;">// PROCESANDO_PETICIÓN...</span>';
+                chatMessages.appendChild(thinkingDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+
+                // Simulate AI computing
                 setTimeout(() => {
+                    thinkingDiv.remove();
                     const response = getAIResponse(text);
                     addMessage(response, 'ai');
-                }, 1000);
+                }, 1200);
             }
         };
 
