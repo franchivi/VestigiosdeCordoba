@@ -209,6 +209,19 @@ html {
     scroll-padding-top: 6rem;
 }
 
+/* Fallback visibility if AOS fails */
+[data-aos] {
+    opacity: 1 !important;
+    transform: none !important;
+    visibility: visible !important;
+}
+
+html.aos-init [data-aos] {
+    opacity: unset !important;
+    transform: unset !important;
+    visibility: unset !important;
+}
+
 /* Scanline Animation */
 @keyframes scan {
     0% { top: 0; }
