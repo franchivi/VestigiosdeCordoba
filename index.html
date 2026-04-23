@@ -12,20 +12,28 @@
 <body>
 
     <!-- HUD Navigation -->
-    <nav class="glass-panel" style="position: fixed; top: 2rem; left: 50%; transform: translateX(-50%); width: 90%; z-index: 1000; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; border-radius: 2px;">
-        <div class="data-label" style="font-weight: 800; font-size: 1rem;">SC-01 // VESTIGIOS</div>
-        <div style="display: flex; gap: 2rem;">
-            <a href="#military" class="data-label" style="text-decoration: none; color: var(--on-surface-variant);">01//MILITAR</a>
-            <a href="#mining" class="data-label" style="text-decoration: none; color: var(--on-surface-variant);">02//MINERÍA</a>
-            <a href="#hydraulic" class="data-label" style="text-decoration: none; color: var(--on-surface-variant);">03//HIDRÁULICA</a>
-            <a href="#bridges" class="data-label" style="text-decoration: none; color: var(--on-surface-variant);">04//PASOS</a>
-            <a href="#gallery" class="data-label" style="text-decoration: none; color: var(--on-surface-variant);">05//GALLERY</a>
+    <nav class="main-nav glass-panel">
+        <div class="nav-logo data-label" style="font-weight: 800;">SC-01 // VESTIGIOS</div>
+        
+        <div class="nav-links">
+            <a href="#military" class="data-label">01//MILITAR</a>
+            <a href="#mining" class="data-label">02//MINERÍA</a>
+            <a href="#hydraulic" class="data-label">03//HIDRÁULICA</a>
+            <a href="#bridges" class="data-label">04//PASOS</a>
+            <a href="#gallery" class="data-label">05//GALLERY</a>
         </div>
+
+        <button class="menu-toggle" id="menuToggle" aria-label="Toggle Navigation">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
         <button class="btn-primary" style="padding: 0.5rem 1.5rem; font-size: 0.7rem;">EXPLORAR MAPA</button>
     </nav>
 
     <!-- Hero Section -->
-    <header class="section" style="height: 100vh; display: flex; flex-direction: column; justify-content: center; background: linear-gradient(rgba(18,20,21,0.8), rgba(18,20,21,0.8)), url('sierra_hero_cinematic_1776891571897.png') center/cover no-repeat;">
+    <header class="section" style="height: 100vh; display: flex; flex-direction: column; justify-content: center; background: linear-gradient(rgba(18,20,21,0.8), rgba(18,20,21,0.8)), url('https://lh3.googleusercontent.com/aida/ADBb0ui9K4eDNYHiw4rR2NjBZ-Q81d4Cgi47jXP2UK23NrT0g79mInWRDldzacb416II9H5a8OEmfR6-CCtLcTHYhy598vxm1analAVB4dBWPmdVIkAWhvBw6qdSQJBjc3Mc9It7LxAkOHGDMoPGhI-5uayTuTde15UXokghA6jH3JdAVd6eMTaLXc0yI9gnq25MKucg7bH--SxRF7gfAZ8MyZOqtJ0NmS66dveXU4rkXHY0aMDCiRC1eJeCFWaq') center/cover no-repeat;">
         <div class="light-leak" style="top: -10%; right: -10%;"></div>
         <div data-aos="fade-up">
             <p class="data-label">COORDENADAS 37.9074 N, -4.8545 W</p>
@@ -204,7 +212,7 @@
             <!-- Item 4 -->
             <div class="asymmetric-item-4" style="grid-column: 6 / span 6; margin-top: 2rem;" data-aos="zoom-in">
                 <div class="glass-panel" style="padding: 0.5rem;">
-                    <img src="sierra_hero_cinematic_1776891571897.png" alt="Vista Sierra" style="width: 100%; max-height: 450px; object-fit: cover;">
+                    <img src="https://lh3.googleusercontent.com/aida/ADBb0ui9K4eDNYHiw4rR2NjBZ-Q81d4Cgi47jXP2UK23NrT0g79mInWRDldzacb416II9H5a8OEmfR6-CCtLcTHYhy598vxm1analAVB4dBWPmdVIkAWhvBw6qdSQJBjc3Mc9It7LxAkOHGDMoPGhI-5uayTuTde15UXokghA6jH3JdAVd6eMTaLXc0yI9gnq25MKucg7bH--SxRF7gfAZ8MyZOqtJ0NmS66dveXU4rkXHY0aMDCiRC1eJeCFWaq" alt="Vista Sierra" style="width: 100%; max-height: 450px; object-fit: cover;">
                     <div style="padding: 1.5rem;">
                         <p class="data-label">L-CAPE // 00</p>
                         <h3 style="font-size: 1.5rem;">Panorama de la Sierra de Córdoba</h3>
