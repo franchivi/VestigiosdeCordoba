@@ -76,14 +76,35 @@ h1, h2, h3, .display-text {
 
 /* Layout Rules */
 .section {
-    padding: 10rem 5%;
+    padding: 5rem 5%; /* Mobile default */
     position: relative;
+    width: 100%;
+    overflow: hidden;
+}
+
+@media (min-width: 1024px) {
+    .section {
+        padding: 10rem 5%;
+    }
 }
 
 .asymmetric-grid {
-    display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    gap: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+}
+
+@media (min-width: 1024px) {
+    .asymmetric-grid {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        flex-direction: row;
+        gap: 2rem;
+    }
+
+    .asymmetric-item-2 { margin-top: 10rem; }
+    .asymmetric-item-3 { margin-top: -5rem; }
+    .asymmetric-item-4 { margin-top: 2rem; }
 }
 
 /* Glassmorphism Panels */
@@ -195,21 +216,7 @@ html {
 }
 
 /* Responsive Adjustments */
-@media (max-width: 1024px) {
-    .asymmetric-grid {
-        grid-template-columns: 1fr;
-        gap: 3rem;
-    }
-
-    .asymmetric-grid > div {
-        grid-column: span 1 !important;
-        margin-top: 0 !important;
-    }
-
-    .section {
-        padding: 5rem 5%;
-    }
-
+@media (max-width: 1023px) {
     .main-nav {
         width: 95%;
         padding: 1rem 1.5rem;
@@ -224,14 +231,16 @@ html {
         position: absolute;
         top: 100%;
         left: 0;
+        right: 0;
         width: 100%;
-        background: rgba(18, 20, 21, 0.95);
+        background: rgba(18, 20, 21, 0.98);
         backdrop-filter: blur(24px);
         flex-direction: column;
         padding: 2rem;
         gap: 1.5rem;
         display: none;
         border-top: 1px solid var(--outline-variant);
+        text-align: center;
     }
 
     .nav-links.active {
@@ -243,21 +252,22 @@ html {
     }
 
     nav .btn-primary {
-        display: none; /* Hide button on mobile to save space */
-    }
-
-    h2 {
-        font-size: 2.8rem !important;
+        display: none;
     }
 
     h1 {
-        font-size: 3.5rem !important;
+        font-size: 3rem !important;
+        word-break: break-word;
+    }
+
+    h2 {
+        font-size: 2.2rem !important;
     }
 }
 
 @media (max-width: 480px) {
     h1 {
-        font-size: 2.8rem !important;
+        font-size: 2.2rem !important;
     }
     
     .data-label {
