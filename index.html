@@ -10,10 +10,20 @@
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 </head>
 <body>
+    <!-- Page Loader -->
+    <div class="page-loader" id="pageLoader">
+        <div class="loader-content">
+            <div class="loader-ring"></div>
+            <p class="loader-text">Cargando Vestigios...</p>
+        </div>
+    </div>
+
+    <!-- Scroll Progress -->
+    <div class="scroll-progress" id="scrollProgress"></div>
 
     <!-- HUD Navigation -->
-    <nav class="main-nav glass-panel">
-        <div class="nav-logo data-label" style="font-weight: 800;">SC-01 // VESTIGIOS</div>
+    <nav class="main-nav">
+        <div class="nav-logo">SC-01 // VESTIGIOS</div>
         
         <div class="nav-links">
             <a href="#military" class="data-label">01//MILITAR</a>
@@ -33,12 +43,15 @@
     </nav>
 
     <!-- Hero Section -->
-    <header class="section" style="height: 100vh; display: flex; flex-direction: column; justify-content: center; background: linear-gradient(rgba(18,20,21,0.8), rgba(18,20,21,0.8)), url('https://lh3.googleusercontent.com/aida/ADBb0ui9K4eDNYHiw4rR2NjBZ-Q81d4Cgi47jXP2UK23NrT0g79mInWRDldzacb416II9H5a8OEmfR6-CCtLcTHYhy598vxm1analAVB4dBWPmdVIkAWhvBw6qdSQJBjc3Mc9It7LxAkOHGDMoPGhI-5uayTuTde15UXokghA6jH3JdAVd6eMTaLXc0yI9gnq25MKucg7bH--SxRF7gfAZ8MyZOqtJ0NmS66dveXU4rkXHY0aMDCiRC1eJeCFWaq') center/cover no-repeat;">
+    <header class="section hero-section" style="background: none;">
+        <div class="hero-bg" style="background-image: url('https://lh3.googleusercontent.com/aida/ADBb0ui9K4eDNYHiw4rR2NjBZ-Q81d4Cgi47jXP2UK23NrT0g79mInWRDldzacb416II9H5a8OEmfR6-CCtLcTHYhy598vxm1analAVB4dBWPmdVIkAWhvBw6qdSQJBjc3Mc9It7LxAkOHGDMoPGhI-5uayTuTde15UXokghA6jH3JdAVd6eMTaLXc0yI9gnq25MKucg7bH--SxRF7gfAZ8MyZOqtJ0NmS66dveXU4rkXHY0aMDCiRC1eJeCFWaq');"></div>
+        <div class="hero-overlay"></div>
+        <div class="hero-particles" id="heroParticles"></div>
         <div class="light-leak" style="top: -10%; right: -10%;"></div>
-        <div data-aos="fade-up">
-            <p class="data-label">COORDENADAS 37.9074 N, -4.8545 W</p>
-            <h1 style="font-size: clamp(3rem, 10vw, 8rem); line-height: 0.9; margin: 1rem 0;">VESTIGIOS<br>DE CÓRDOBA</h1>
-            <p style="max-width: 600px; font-weight: 300; font-size: 1.2rem; color: var(--on-surface-variant);">
+        <div class="hero-content" data-aos="fade-up">
+            <p class="hero-coords">COORDENADAS 37.9074 N, -4.8545 W</p>
+            <h1 class="hero-title">VESTIGIOS<br>DE CÓRDOBA</h1>
+            <p class="hero-description">
                 Análisis exhaustivo del patrimonio minero, militar e hidráulico de la Sierra de Córdoba. Un viaje al pulmón logístico de las metrópolis más importantes del mundo antiguo.
             </p>
         </div>
@@ -178,44 +191,44 @@
             
             <!-- Item 1 -->
             <div style="grid-column: span 7;" data-aos="fade-right">
-                <div class="glass-panel" style="padding: 0.5rem; border-color: var(--primary);">
-                    <img src="banos_popea_hydraulic_ruins_1776891876588.png" alt="Baños de Popea" style="width: 100%; max-height: 500px; object-fit: cover;">
-                    <div style="padding: 1.5rem;">
+                <div class="image-card glass-panel" style="padding: 0.5rem;">
+                    <img src="banos_popea_hydraulic_ruins_1776891876588.png" alt="Baños de Popea">
+                    <div class="image-overlay">
                         <p class="data-label">B-POOL // 01</p>
-                        <h3 style="font-size: 1.5rem;">Ruinas Hidráulicas - Popea</h3>
+                        <h3 style="font-size: 1.5rem; margin-top: 0.5rem;">Ruinas Hidráulicas - Popea</h3>
                     </div>
                 </div>
             </div>
 
             <!-- Item 2 -->
             <div class="asymmetric-item-2" style="grid-column: 8 / span 5;" data-aos="fade-left">
-                <div class="glass-panel" style="padding: 0.5rem;">
-                    <img src="cerro_muriano_mining_industrial_1776891599254.png" alt="Cerro Muriano" style="width: 100%; max-height: 400px; object-fit: cover;">
-                    <div style="padding: 1.5rem;">
+                <div class="image-card glass-panel" style="padding: 0.5rem;">
+                    <img src="cerro_muriano_mining_industrial_1776891599254.png" alt="Cerro Muriano">
+                    <div class="image-overlay">
                         <p class="data-label">M-CORE // 04</p>
-                        <h3 style="font-size: 1.5rem;">Complex Tecnológico Muriano</h3>
+                        <h3 style="font-size: 1.5rem; margin-top: 0.5rem;">Complex Tecnológico Muriano</h3>
                     </div>
                 </div>
             </div>
 
             <!-- Item 3 -->
             <div class="asymmetric-item-3" style="grid-column: 2 / span 4;" data-aos="fade-up">
-                <div class="glass-panel" style="padding: 0.5rem;">
-                    <img src="tower_seven_corners_reconstruction_1776891586181.png" alt="Torre Siete Esquinas" style="width: 100%; max-height: 350px; object-fit: cover;">
-                    <div style="padding: 1.5rem;">
+                <div class="image-card glass-panel" style="padding: 0.5rem;">
+                    <img src="tower_seven_corners_reconstruction_1776891586181.png" alt="Torre Siete Esquinas">
+                    <div class="image-overlay">
                         <p class="data-label">W-TOWER // 07</p>
-                        <h3 style="font-size: 1.5rem;">Atalaya Septagonal</h3>
+                        <h3 style="font-size: 1.5rem; margin-top: 0.5rem;">Atalaya Septagonal</h3>
                     </div>
                 </div>
             </div>
 
             <!-- Item 4 -->
             <div class="asymmetric-item-4" style="grid-column: 6 / span 6;" data-aos="zoom-in">
-                <div class="glass-panel" style="padding: 0.5rem;">
-                    <img src="https://lh3.googleusercontent.com/aida/ADBb0ui9K4eDNYHiw4rR2NjBZ-Q81d4Cgi47jXP2UK23NrT0g79mInWRDldzacb416II9H5a8OEmfR6-CCtLcTHYhy598vxm1analAVB4dBWPmdVIkAWhvBw6qdSQJBjc3Mc9It7LxAkOHGDMoPGhI-5uayTuTde15UXokghA6jH3JdAVd6eMTaLXc0yI9gnq25MKucg7bH--SxRF7gfAZ8MyZOqtJ0NmS66dveXU4rkXHY0aMDCiRC1eJeCFWaq" alt="Vista Sierra" style="width: 100%; max-height: 450px; object-fit: cover;">
-                    <div style="padding: 1.5rem;">
+                <div class="image-card glass-panel" style="padding: 0.5rem;">
+                    <img src="https://lh3.googleusercontent.com/aida/ADBb0ui9K4eDNYHiw4rR2NjBZ-Q81d4Cgi47jXP2UK23NrT0g79mInWRDldzacb416II9H5a8OEmfR6-CCtLcTHYhy598vxm1analAVB4dBWPmdVIkAWhvBw6qdSQJBjc3Mc9It7LxAkOHGDMoPGhI-5uayTuTde15UXokghA6jH3JdAVd6eMTaLXc0yI9gnq25MKucg7bH--SxRF7gfAZ8MyZOqtJ0NmS66dveXU4rkXHY0aMDCiRC1eJeCFWaq" alt="Vista Sierra">
+                    <div class="image-overlay">
                         <p class="data-label">L-CAPE // 00</p>
-                        <h3 style="font-size: 1.5rem;">Panorama de la Sierra de Córdoba</h3>
+                        <h3 style="font-size: 1.5rem; margin-top: 0.5rem;">Panorama de la Sierra de Córdoba</h3>
                     </div>
                 </div>
             </div>
@@ -280,8 +293,10 @@
 
     <!-- Footer -->
     <footer class="section">
-        <p class="data-label">PROYECTO VESTIGIOS // SIERRA DE CÓRDOBA</p>
-        <p style="opacity: 0.5; margin-top: 1rem; font-size: 0.8rem;">© 2026 Arqueología Digital. Basado en el sistema "Ecos de Córdoba".</p>
+        <div class="footer-content">
+            <p class="footer-logo">PROYECTO VESTIGIOS // SIERRA DE CÓRDOBA</p>
+            <p class="footer-copy">© 2026 Arqueología Digital. Basado en el sistema "Ecos de Córdoba".</p>
+        </div>
     </footer>
 
     <!-- Scripts -->

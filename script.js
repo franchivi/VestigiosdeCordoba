@@ -1,15 +1,64 @@
 /* 
-   The Digital Archeologist - Interactions & UI
-   Handles mobile menu, smooth scroll, and AOS initialization.
+   The Digital Archeologist v2.0 - Enhanced Interactions & UI
+   Handles loader, scroll progress, particles, mobile menu, and AOS initialization.
 */
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Page Loader
+    const pageLoader = document.getElementById('pageLoader');
+    if (pageLoader) {
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                pageLoader.classList.add('hidden');
+                document.body.style.overflowY = 'auto';
+            }, 1500);
+        });
+    }
+
+    // Scroll Progress Bar
+    const scrollProgress = document.getElementById('scrollProgress');
+    if (scrollProgress) {
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPercent = (scrollTop / docHeight) * 100;
+            scrollProgress.style.width = scrollPercent + '%';
+        });
+    }
+
+    // Navigation Scroll Effect
+    const mainNav = document.querySelector('.main-nav');
+    if (mainNav) {
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                mainNav.classList.add('scrolled');
+            } else {
+                mainNav.classList.remove('scrolled');
+            }
+        });
+    }
+
+    // Particle System for Hero
+    const heroParticles = document.getElementById('heroParticles');
+    if (heroParticles) {
+        const particleCount = 30;
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 15 + 's';
+            particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+            heroParticles.appendChild(particle);
+        }
+    }
+
     // Initialize AOS
     if (typeof AOS !== 'undefined') {
         AOS.init({
             duration: 1000,
             once: true,
-            offset: 100
+            offset: 100,
+            easing: 'ease-out-cubic'
         });
     }
 
@@ -18,10 +67,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const navLinks = document.querySelector('.nav-links');
     if (menuToggle && navLinks) {
         menuToggle.addEventListener('click', () => {
+            menuToggle.classList.toggle('active');
             navLinks.classList.toggle('active');
         });
         navLinks.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', () => {
+                menuToggle.classList.remove('active');
                 navLinks.classList.remove('active');
             });
         });
@@ -53,44 +104,57 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Image Reconstruction Effects
-    document.querySelectorAll('img').forEach(img => {
+    // Enhanced Image Card Effects
+    document.querySelectorAll('.image-card, .glass-panel img').forEach(img => {
         const container = img.parentElement;
         if (!container) return;
-        container.style.position = 'relative';
-        container.style.overflow = 'hidden';
         
-        const overlay = document.createElement('div');
-        overlay.classList.add('reconstruction-overlay');
-        overlay.style.cssText = `position: absolute; top:0; left:0; width:100%; height:100%; background: repeating-linear-gradient(0deg, rgba(255,181,153,0.05) 0px, rgba(255,181,153,0.05) 1px, transparent 1px, transparent 2px); opacity:0; transition: opacity 0.5s ease; pointer-events:none; display:flex; align-items:center; justify-content:center; flex-direction:column;`;
+        // Add image-card class if not present
+        if (!container.classList.contains('image-card')) {
+            container.classList.add('image-card');
+        }
         
-        const scanline = document.createElement('div');
-        scanline.style.cssText = `position:absolute; top:0; left:0; width:100%; height:2px; background:var(--primary); box-shadow:0 0 10px var(--primary); opacity:0.5; animation: scan 2s linear infinite; display:none;`;
-        overlay.appendChild(scanline);
-        
-        const label = document.createElement('span');
-        label.innerText = 'RECONSTRUCTING_DATA...';
-        label.classList.add('data-label');
-        label.style.fontSize = '0.6rem';
-        overlay.appendChild(label);
-        
-        container.appendChild(overlay);
-        
-        container.addEventListener('mouseenter', () => {
-            overlay.style.opacity = '1';
-            scanline.style.display = 'block';
-            img.style.filter = 'blur(2px) grayscale(0.5)';
-            img.style.transform = 'scale(1.05)';
-        });
-        
-        container.addEventListener('mouseleave', () => {
-            overlay.style.opacity = '0';
-            scanline.style.display = 'none';
-            img.style.filter = 'none';
-            img.style.transform = 'scale(1)';
-        });
-        img.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+        // Add overlay if not exists
+        if (!container.querySelector('.image-overlay')) {
+            const overlay = document.createElement('div');
+            overlay.classList.add('image-overlay');
+            
+            const scanline = document.createElement('div');
+            scanline.classList.add('scanline-effect');
+            overlay.appendChild(scanline);
+            
+            const label = document.createElement('span');
+            label.classList.add('data-label');
+            label.style.fontSize = '0.6rem';
+            label.style.marginTop = '1rem';
+            label.innerText = 'RECONSTRUCTING_DATA...';
+            overlay.appendChild(label);
+            
+            container.appendChild(overlay);
+        }
     });
 
-    console.log("UI Interactions Initialized.");
+    // Intersection Observer for fade-in animations
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -100px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, observerOptions);
+
+    document.querySelectorAll('.glass-panel, .stat-card').forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(20px)';
+        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(el);
+    });
+
+    console.log("UI Interactions v2.0 Initialized.");
 });
